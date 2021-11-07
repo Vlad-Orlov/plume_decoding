@@ -1,0 +1,6 @@
+*.root
+*.txt
+*.mdf
+*.py
+pcie40_mdfreader
+*.root.
