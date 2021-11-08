@@ -66,7 +66,8 @@ std::string read_bank(std::ifstream &mainfile, std::string &line)
   tmp_line.ReplaceAll("0x0040", "");
   tmp_line.ReplaceAll("0x0060", "");
   tmp_line.ReplaceAll("0x0080", "");
-  
+
+  if (tmp_line.Length() != 342) return ""; 
   return (std::string)tmp_line;
 }
 
@@ -167,6 +168,7 @@ void decode_new(TString inputfile_name = "/daqarea1/plume/Run_0000222414_2021102
       }
 
       std::string bank = read_bank(mainfile, line);
+	if (bank.length() < 342) continue;		
       // std::cout << bank << std::endl;
       // std::cout << "hereA" << std::endl;
       // ignore the first 24 char as they are LLT data
@@ -193,6 +195,7 @@ void decode_new(TString inputfile_name = "/daqarea1/plume/Run_0000222414_2021102
 
       std::string bank = read_bank(mainfile, line);
 
+      if (bank.length() < 342) continue;
       // std::cout << bank << std::endl;
       //cout << line << endl;
       // ignore the first 24 char as they are LLT data
@@ -226,4 +229,17 @@ void decode_new(TString inputfile_name = "/daqarea1/plume/Run_0000222414_2021102
   tree->Write("", TObject::kOverwrite);
   outfile->Close();
   mainfile.close();
+}
+
+int main(int argc, char *argv[]){
+
+  if(argc != 2){
+    std::cout << "Usage: ./calo_decoding file_name.txt" << std::endl;
+    return 0;
+  }
+
+  TString file_name = TString(argv[1]);
+
+  decode_new(file_name);
+  return 0;
 }
